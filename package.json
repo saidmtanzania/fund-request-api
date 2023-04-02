@@ -1,0 +1,31 @@
+{
+  "name": "fund-request-api",
+  "version": "1.0.0",
+  "description": "This is fund request application interface programming for requesting fund for a certain activities of a company",
+  "main": "app.ts",
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "fund",
+    "restapi",
+    "nodejs",
+    "typescript",
+    "mongodb",
+    "mongoose",
+    "unittest",
+    "test",
+    "driven",
+    "development"
+  ],
+  "author": "ipushsoftwares.com",
+  "license": "MIT",
+  "repository": "https://github.com/saidmtanzania/fund-request-api.git",
+  "private": true,
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.11",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.3"
+  }
+}
