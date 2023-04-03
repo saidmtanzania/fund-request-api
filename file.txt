@@ -1,2 +1,0 @@
-npm install express @types/node
-npm install --save-dev @types/express
