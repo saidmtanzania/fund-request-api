@@ -1,21 +1,14 @@
 {
   "compilerOptions": {
-     "lib": ["es2018"],
-    "target": "es2018",
+    "target": "ES2017",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "noEmitOnError": true,
     "esModuleInterop": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "resolveJsonModule": false,
-    "skipLibCheck": true
+    "outDir": "./dist",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
   },
-  "include": ["src/**/*.ts", "**/*.spec.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.test.ts"]
 }
