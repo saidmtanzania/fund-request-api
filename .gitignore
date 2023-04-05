@@ -19,3 +19,4 @@ logs/
 .env.prod
 .env.staging
 **/.DS_Store
+config.env

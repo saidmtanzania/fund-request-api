@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
   <file path="/home/saidmtanzania/Desktop/fund-request-api/tests/app.spec.ts">
-    <testCase name="GET / should return 200 OK" duration="106"/>
+    <testCase name="GET / should return 200 OK" duration="157"/>
   </file>
   <file path="/home/saidmtanzania/Desktop/fund-request-api/tests/dummy.spec.ts">
-    <testCase name="Dummy Test Cases Verify Jest is working" duration="5"/>
+    <testCase name="Dummy Test Cases Verify Jest is working" duration="3"/>
   </file>
 </testExecutions>

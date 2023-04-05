@@ -1,12 +1,25 @@
-import express, { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import express from 'express';
 import morgan from 'morgan';
+import userRoute from './routes/userRoutes';
+import AppError from './utils/appError';
+import eHandler from './utils/errorHandler';
 
 const app = express();
 
 app.use(morgan('dev'));
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: '40kb' }));
 
-app.get('/', (req: Request, res: Response) => {
-  res.status(200).json({ message: 'Hello World!' });
+app.use('/api/v1/users', userRoute);
+
+
+// handling unknown routes
+app.all('*', (req, _res, next) => {
+  next(new AppError(`Cant find ${req.originalUrl}`, 404));
 });
+
+
+app.use(eHandler);
 
 export default app;
