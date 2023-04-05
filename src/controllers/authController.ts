@@ -16,7 +16,6 @@ import { sendMail } from '../utils/Email';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 
-
 interface TokenPayload {
   id: string;
   iat: any;
@@ -26,7 +25,7 @@ interface SignTokenProps {
   id: string | number;
 }
 
-const signToken = (props: SignTokenProps, next:any) => {
+const signToken = (props: SignTokenProps, next: any) => {
   const jwtSecret = process.env.JWT_SECRET;
   if (!jwtSecret) {
     return next(new AppError('JWT secret is not defined', 401));
@@ -37,9 +36,9 @@ const signToken = (props: SignTokenProps, next:any) => {
   return token;
 };
 
-const createSendToken = (user:any, statusCode:any, res:any, next:any) => {
+const createSendToken = (user: any, statusCode: any, res: any, next: any) => {
   const token = signToken(user._id, next);
-  const expireIn:any = process.env.JWT_COOKIE_EXPIRES_IN;
+  const expireIn: any = process.env.JWT_COOKIE_EXPIRES_IN;
   if (!expireIn) {
     return next(new AppError('ExpireIn secret is not defined', 401));
   }
@@ -49,7 +48,7 @@ const createSendToken = (user:any, statusCode:any, res:any, next:any) => {
     httpOnly: true,
     secure: false,
   };
-  if (process.env.NODE_ENV === 'production')cookieOption.secure = true;
+  if (process.env.NODE_ENV === 'production') cookieOption.secure = true;
   res.cookie('jwt', token, cookieOption);
   user.password = undefined;
   res.status(statusCode).json({
@@ -59,7 +58,7 @@ const createSendToken = (user:any, statusCode:any, res:any, next:any) => {
   });
 };
 
-export const signup:RequestHandler = catchAsync(async (req:any, res:any, next: any) => {
+export const signup: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   const newUser = await User.create({
     first_name: req.body.first_name,
     last_name: req.body.last_name,
@@ -88,8 +87,7 @@ export const login: RequestHandler = catchAsync(async (req: any, res: any, next:
   createSendToken(user, 200, res, next);
 });
 
-
-export const protect:RequestHandler = catchAsync(async (req:any, res:any, next:any) => {
+export const protect: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   let token;
 
   // 1) Getting token and validate if is available
@@ -126,90 +124,89 @@ export const protect:RequestHandler = catchAsync(async (req:any, res:any, next:a
 
 export const restrictTo =
   (...roles: any[]) =>
-  (req:any, res:any, next:any) => {
+  (req: any, res: any, next: any) => {
     if (!roles.includes(req.user.role)) {
       return next(new AppError('You do not have permission to perform this action!', 403));
     }
     next();
   };
 
-  export const forgotPassword:RequestHandler = catchAsync(async (req:any, res:any, next:any) => {
-    // 1) Get user based on posted email
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) {
-      return next(new AppError('Please provide a valid email address ', 404));
-    }
+export const forgotPassword: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  // 1) Get user based on posted email
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError('Please provide a valid email address ', 404));
+  }
 
-    // 2) Generate random reset token
-    const resetToken = user.createPasswordReset();
-    await user.save({ validateBeforeSave: false });
+  // 2) Generate random reset token
+  const resetToken = user.createPasswordReset();
+  await user.save({ validateBeforeSave: false });
 
-    // Send to user email
-    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
-    const message = `Forgot password? Submit a PATCH request with new password and passwordConfirm to: ${resetURL}.\n If you didn't forget password, ignore this email!`;
-    try {
-      await sendMail({
-        email: user.email,
-        subject: 'Your password reset token (valid for 10m)',
-        message,
-      });
-      res.status(200).json({
-        status: 'success',
-        message: 'Token sent to email',
-      });
-    } catch (error) {
-      user.passwordResetExpires = undefined!;
-      user.passwordResetToken = undefined!;
-      await user.save({ validateBeforeSave: false });
-      return next(new AppError('There was an error sending the email. try again later!', 500));
-    }
-  });
-
-  export const resetPassword:RequestHandler = catchAsync(async (req:any, res:any, next:any) => {
-    const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
-
-    const user = await User.findOne({
-      passwordResetToken: hashedToken,
-      passwordResetExpires: { $gt: Date.now() },
+  // Send to user email
+  const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
+  const message = `Forgot password? Submit a PATCH request with new password and passwordConfirm to: ${resetURL}.\n If you didn't forget password, ignore this email!`;
+  try {
+    await sendMail({
+      email: user.email,
+      subject: 'Your password reset token (valid for 10m)',
+      message,
     });
-
-    if (!user) {
-      return next(new AppError('Token is invalid or has expired!', 400));
-    }
-
-    user.password = req.body.password;
-    user.passwordConfirm = req.body.passwordConfirm;
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to email',
+    });
+  } catch (error) {
     user.passwordResetExpires = undefined!;
     user.passwordResetToken = undefined!;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
+    return next(new AppError('There was an error sending the email. try again later!', 500));
+  }
+});
 
-    createSendToken(user, 200, res, next);
+export const resetPassword: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
   });
 
-  export const updatePassword:RequestHandler = catchAsync(async (req:any, res:any, next:any) => {
-    // 1) Get user from collection
-    const user = await User.findById(req.user.id).select('+password');
-    if(!user){
-      throw new Error('User not found!');
-    }
+  if (!user) {
+    return next(new AppError('Token is invalid or has expired!', 400));
+  }
 
-    // 2) Check if POSTed current password is correct
-    if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-      return next(new AppError('Your current password is wrong!', 401));
-    }
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetExpires = undefined!;
+  user.passwordResetToken = undefined!;
+  await user.save();
 
-    // 3) If so, update the password
-    user.password = req.body.password;
-    user.passwordConfirm = req.body.passwordConfirm;
-    await user.save();
+  createSendToken(user, 200, res, next);
+});
 
-    // 4) Log user in, update JWT
-    createSendToken(user, 200, res, next);
+export const updatePassword: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  // 1) Get user from collection
+  const user = await User.findById(req.user.id).select('+password');
+  if (!user) {
+    throw new Error('User not found!');
+  }
+
+  // 2) Check if POSTed current password is correct
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError('Your current password is wrong!', 401));
+  }
+
+  // 3) If so, update the password
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+
+  // 4) Log user in, update JWT
+  createSendToken(user, 200, res, next);
+});
+
+export const logout: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  res.status(200).json({
+    message: 'User Successfully logout',
   });
-
-  export const logout:RequestHandler = catchAsync(async (req:any, res:any, next:any) => {
-    res.status(200).json({
-      message: 'User Successfully logout',
-    });
-  });
-
+});

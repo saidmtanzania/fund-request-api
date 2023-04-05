@@ -13,12 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '40kb' }));
 
 app.use('/api/v1/users', userRoute);
 
-
 // handling unknown routes
 app.all('*', (req, _res, next) => {
   next(new AppError(`Cant find ${req.originalUrl}`, 404));
 });
-
 
 app.use(eHandler);
 

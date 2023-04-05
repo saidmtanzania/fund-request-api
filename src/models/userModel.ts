@@ -13,15 +13,14 @@ export interface IUser extends Document {
   photo?: string;
   phone: string;
   password: string;
-  passwordConfirm: string
+  passwordConfirm: string;
   passwordChangedAt: Date;
   passwordResetToken: string;
   passwordResetExpires: Date;
   correctPassword: (candidatePassword: string, userPassword: string) => Promise<boolean>;
-  changePasswordAfter: (any:any) => Promise<boolean>;
+  changePasswordAfter: (any: any) => Promise<boolean>;
   createPasswordReset: () => any;
 }
-
 
 const userSchema = new Schema<IUser>({
   first_name: {
@@ -59,7 +58,7 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, 'Please confirm your password'],
     validate: {
-      validator(this:any, el:string){
+      validator(this: any, el: string) {
         return el === this.password;
       },
       message: 'Password does not match!',
@@ -70,7 +69,7 @@ const userSchema = new Schema<IUser>({
   passwordResetExpires: Date,
 });
 
-userSchema.pre('save', async function (this:any, next) {
+userSchema.pre('save', async function (this: any, next) {
   // for modified password only
   if (!this.isModified('password')) return next();
   // generating password round
@@ -83,20 +82,20 @@ userSchema.pre('save', async function (this:any, next) {
   return next();
 });
 
-userSchema.pre('save', function (this:any, next) {
+userSchema.pre('save', function (this: any, next) {
   if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
   return next();
 });
 
-userSchema.methods.correctPassword = async function (candidatePassword:any, userPassword: any) {
+userSchema.methods.correctPassword = async function (candidatePassword: any, userPassword: any) {
   return bcrypt.compare(candidatePassword, userPassword);
 };
 
-userSchema.methods.changePasswordAfter = function (JWTTimestamp:any) {
+userSchema.methods.changePasswordAfter = function (JWTTimestamp: any) {
   if (this.passwordChangedAt) {
-    const changedTimestamp = ((this.passwordChangedAt.getTime()/1000), 10);
+    const changedTimestamp = (this.passwordChangedAt.getTime() / 1000, 10);
     console.log(changedTimestamp);
     return JWTTimestamp < changedTimestamp;
   }
@@ -110,8 +109,6 @@ userSchema.methods.createPasswordReset = function () {
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
-
-
 
 const User = model<IUser>('User', userSchema);
 
