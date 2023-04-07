@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon dist/Server.js",
-    "dev": "ts-node src/Server.ts",
+    "dev": "ts-node src/Server.ts --no-cache",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint --fix src/**/*.ts",
