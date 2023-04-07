@@ -8,29 +8,19 @@
 /* eslint-disable consistent-return */
 /* eslint-disable import/prefer-default-export */
 import crypto from 'crypto';
-import { promisify } from 'util';
 import { RequestHandler } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import User from '../models/userModel';
 import { sendMail } from '../utils/Email';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 
-interface TokenPayload {
-  id: string;
-  iat: any;
-}
-
-interface SignTokenProps {
-  id: string | number;
-}
-
-const signToken = (props: SignTokenProps, next: any) => {
+const signToken = (id: any, next: any) => {
   const jwtSecret = process.env.JWT_SECRET;
   if (!jwtSecret) {
     return next(new AppError('JWT secret is not defined', 401));
   }
-  const token = jwt.sign({ id: props.id }, jwtSecret, {
+  const token = jwt.sign({ id }, jwtSecret, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
   return token;
@@ -99,12 +89,12 @@ export const protect: RequestHandler = catchAsync(async (req: any, res: any, nex
   }
 
   // 2) Token verification
-  const jwtSecret: any = process.env.JWT_SECRET;
+  const jwtSecret = process.env.JWT_SECRET as string;
   if (!jwtSecret) {
-    throw new Error('JWT secret is not defined');
+    return next(new AppError('JWT secret is not defined', 401));
   }
 
-  const decoded = jwt.verify(token, jwtSecret) as TokenPayload;
+  const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
 
   // 3) Checking if user still exist
   const currentUser = await User.findById(decoded.id);

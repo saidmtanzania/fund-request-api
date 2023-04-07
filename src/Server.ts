@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import app from './App';
 
 dotenv.config({ path: './config.env' });
 
@@ -9,6 +8,9 @@ process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 👋 Shutting down..');
   process.exit(1);
 });
+
+// eslint-disable-next-line import/first
+import app from './App';
 
 let DB;
 if (process.env.NODE_ENV === 'development') {
