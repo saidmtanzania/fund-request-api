@@ -11,8 +11,8 @@ import crypto from 'crypto';
 import { RequestHandler } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import User from '../models/userModel';
+import AppError from '../utils/AppError';
 import { sendMail } from '../utils/Email';
-import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 
 const signToken = (id: any, next: any) => {

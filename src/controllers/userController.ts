@@ -4,7 +4,7 @@
 /* eslint-disable import/prefer-default-export */
 import { RequestHandler } from 'express';
 import User from '../models/userModel';
-import AppError from '../utils/appError';
+import AppError from '../utils/AppError';
 import catchAsync from '../utils/catchAsync';
 
 const filterObj = (obj: Record<string, any>, ...allowedFields: any[]) => {

@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable import/no-extraneous-dependencies */
 import sgMail from '@sendgrid/mail';
-import AppError from './appError';
+import AppError from './AppError';
 
 const apiKey: any = process.env.SENDGRID_API_KEY;
 

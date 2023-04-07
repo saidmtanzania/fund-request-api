@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-import-module-exports */
-import AppError from './appError';
+import AppError from './AppError';
 
 const handleCastErrorDB = (err: any) => {
   const message = `Invalid ${err.path}: ${err.value}.`;
