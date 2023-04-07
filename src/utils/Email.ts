@@ -23,4 +23,3 @@ export const sendMail = async (option: any) => {
   };
   await sgMail.send(msg);
 };
-
