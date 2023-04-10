@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
 import { RequestHandler } from 'express';
-import User from '../models/userModel';
+import User from '../models/user.model';
 import AppError from '../utils/AppError';
 import catchAsync from '../utils/catchAsync';
 
@@ -18,7 +18,8 @@ const filterObj = (obj: Record<string, any>, ...allowedFields: any[]) => {
 };
 
 export const getAllUser: RequestHandler = catchAsync(async (_req: any, res: any, next: any) => {
-  const users = await User.find();
+  const users = await User.find().select('-_id -__v');
+
   if (users.length === 0) {
     return next(new AppError('There is no user at the moment', 404));
   }
@@ -60,6 +61,7 @@ export const createUser: RequestHandler = catchAsync(async (req: any, res: any, 
 export const getUser: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   const userId = req.params.id;
   const user = await User.findById(userId);
+
   if (!user) {
     return next(new AppError('There is no user with that ID!', 404));
   }

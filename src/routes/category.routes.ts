@@ -1,6 +1,6 @@
 import express from 'express';
-import * as authController from '../controllers/authController';
-import * as categoryController from '../controllers/categoryController';
+import * as authController from '../controllers/auth.controller';
+import * as categoryController from '../controllers/category.controller';
 
 const router = express.Router();
 router.use(authController.protect);

@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from 'express';
-import Category from '../models/categoryModel';
+import Category from '../models/category.model';
 import AppError from '../utils/AppError';
 import APIFeatures from '../utils/apiFeatures';
 import catchAsync from '../utils/catchAsync';

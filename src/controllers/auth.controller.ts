@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable import/no-import-module-exports */
 /* eslint-disable prefer-destructuring */
@@ -10,7 +11,7 @@
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import User from '../models/userModel';
+import User from '../models/user.model';
 import AppError from '../utils/AppError';
 import { sendMail } from '../utils/Email';
 import catchAsync from '../utils/catchAsync';
@@ -114,9 +115,28 @@ export const protect: RequestHandler = catchAsync(async (req: any, res: any, nex
 
 export const restrictTo =
   (...roles: any[]) =>
-  (req: any, res: any, next: any) => {
-    if (!roles.includes(req.user.role)) {
-      return next(new AppError('You do not have permission to perform this action!', 403));
+  (req: any, _res: any, next: any) => {
+    if (!roles.includes(req.user.role.name)) {
+      return next(new AppError('Action forbidden!', 403));
+    }
+    next();
+  };
+
+export const hasPermission =
+  ( on_doc:any, ...Permissions: any[]) =>
+  (req: any, _res: any, next: any) => {
+    let uPerm: string | any[];
+    const { ...resource } = req.user.role.privileges;
+    const keys = Object.keys(resource);
+    for (const key of keys) {
+      if (resource[key].resource.on_doc === true) {
+         uPerm = resource[key].actions;
+         console.log(resource[key].doc);
+      }
+    }
+
+    if (!Permissions.every((item) => uPerm.includes(item))) {
+      return next(new AppError('Access denied', 403));
     }
     next();
   };

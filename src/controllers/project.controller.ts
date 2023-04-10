@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
 import { RequestHandler } from 'express';
-import Project from '../models/projectModel';
+import Project from '../models/project.model';
 import AppError from '../utils/AppError';
 import APIFeatures from '../utils/apiFeatures';
 import catchAsync from '../utils/catchAsync';

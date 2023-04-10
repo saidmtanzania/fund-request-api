@@ -3,17 +3,19 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 import validator from 'validator';
 
 export interface IUser extends Document {
   first_name: string;
   last_name: string;
   email: string;
-  photo?: string;
+  role: Types.ObjectId;
+  permissions: string[];
   phone: string;
   password: string;
   passwordConfirm: string;
+  photo?: string;
   passwordChangedAt: Date;
   passwordResetToken: string;
   passwordResetExpires: Date;
@@ -39,7 +41,11 @@ const userSchema = new Schema<IUser>({
     lowercase: true,
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
-  photo: String,
+  role: {
+    type: Schema.Types.ObjectId,
+    ref: 'Role',
+    required: [true, 'Please provide a role'],
+  },
   phone: {
     type: String,
     required: [true, 'Please provide your phone number'],
@@ -64,6 +70,7 @@ const userSchema = new Schema<IUser>({
       message: 'Password does not match!',
     },
   },
+  photo: String,
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
@@ -80,6 +87,21 @@ userSchema.pre('save', async function (this: any, next) {
   // delete password confirm field
   this.passwordConfirm = undefined;
   return next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'role',
+    select: '-__v -_id',
+    populate: [
+      {
+        path: 'privileges',
+        select: '-__v -_id',
+      },
+    ],
+  });
+
+  next();
 });
 
 userSchema.pre('save', function (this: any, next) {
