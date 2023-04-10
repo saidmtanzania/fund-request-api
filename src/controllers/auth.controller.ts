@@ -123,15 +123,15 @@ export const restrictTo =
   };
 
 export const hasPermission =
-  ( on_doc:any, ...Permissions: any[]) =>
+  (on_doc: any, ...Permissions: any[]) =>
   (req: any, _res: any, next: any) => {
     let uPerm: string | any[];
     const { ...resource } = req.user.role.privileges;
     const keys = Object.keys(resource);
     for (const key of keys) {
       if (resource[key].resource.on_doc === true) {
-         uPerm = resource[key].actions;
-         console.log(resource[key].doc);
+        uPerm = resource[key].actions;
+        console.log(resource[key].doc);
       }
     }
 
