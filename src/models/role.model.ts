@@ -25,19 +25,15 @@ const RoleSchema = new Schema<IRole>({
       resource: {
         on_user: {
           type: Boolean,
-          default: false,
         },
         on_request: {
           type: Boolean,
-          default: false,
         },
         on_budget: {
           type: Boolean,
-          default: false,
         },
         on_role: {
           type: Boolean,
-          default: false,
         },
       },
       actions: [

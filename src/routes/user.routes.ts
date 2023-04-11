@@ -13,7 +13,10 @@ router.route('/register').post(userController.createUser);
 router.route('/updateMyPassword').patch(authController.updatePassword);
 router.route('/updateMe').patch(userController.updateMe);
 router.route('/').get(userController.getAllUser).post(userController.createUser);
-router.use(authController.restrictTo('admin'), authController.hasPermission('on_user', ['read', 'update', 'delete']));
+router.use(
+  authController.restrictTo('admin'),
+  authController.hasPermission({ resources:{ 'on_user': true, 'on_role': true }, actions: ['read', 'update'] })
+);
 router.route('/:id').get(userController.getUser).patch(userController.updateUser).delete(userController.deleteUser);
 
 export default router;

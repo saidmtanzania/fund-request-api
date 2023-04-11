@@ -123,16 +123,31 @@ export const restrictTo =
   };
 
 export const hasPermission =
-  (on_doc: any, ...Permissions: any[]) =>
+  (...Permissions: any[]) =>
   (req: any, _res: any, next: any) => {
+    const { ...resources } = Permissions;
+
     let uPerm: string | any[];
     const { ...resource } = req.user.role.privileges;
     const keys = Object.keys(resource);
     for (const key of keys) {
-      if (resource[key].resource.on_doc === true) {
-        uPerm = resource[key].actions;
-        console.log(resource[key].doc);
+      const newData = resource[key].resource;
+      const newRes = resources[0].resources;
+
+      // console.log(resource[key].resource);
+      // console.log(resource[key].actions);
+      // console.log(resources[0].resources);
+      // console.log(resources[0].actions);
+
+
+      if(newRes.every((item: any) => newData.includes(item))){
+         console.log(newData);
+         console.log(newRes);
       }
+
+      // if (resource[key].resource.on_user === true && resource[key].resource.on_role === true) {
+      //   uPerm = resource[key].actions;
+      // }
     }
 
     if (!Permissions.every((item) => uPerm.includes(item))) {
