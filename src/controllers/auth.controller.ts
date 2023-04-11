@@ -139,10 +139,9 @@ export const hasPermission =
       // console.log(resources[0].resources);
       // console.log(resources[0].actions);
 
-
-      if(newRes.every((item: any) => newData.includes(item))){
-         console.log(newData);
-         console.log(newRes);
+      if (newRes.every((item: any) => newData.includes(item))) {
+        console.log(newData);
+        console.log(newRes);
       }
 
       // if (resource[key].resource.on_user === true && resource[key].resource.on_role === true) {
