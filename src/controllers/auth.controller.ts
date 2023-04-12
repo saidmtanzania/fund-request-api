@@ -1,3 +1,5 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable array-callback-return */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable import/no-import-module-exports */
@@ -125,31 +127,18 @@ export const restrictTo =
 export const hasPermission =
   (...Permissions: any[]) =>
   (req: any, _res: any, next: any) => {
+    let uPerm: string | any[];
+
+    const { ...resource } = req.user.role.privileges;
     const { ...resources } = Permissions;
 
-    let uPerm: string | any[];
-    const { ...resource } = req.user.role.privileges;
-    const keys = Object.keys(resource);
-    for (const key of keys) {
-      const newData = resource[key].resource;
-      const newRes = resources[0].resources;
+    const isMatching = Object.values(resource).some(
+      (data: any) =>
+        Object.keys(resources[0].resources).every((key) => resources[0].resources[key] && data.resource[key]) &&
+        data.actions.every((action: any) => resources[0].actions.includes(action))
+    );
 
-      // console.log(resource[key].resource);
-      // console.log(resource[key].actions);
-      // console.log(resources[0].resources);
-      // console.log(resources[0].actions);
-
-      if (newRes.every((item: any) => newData.includes(item))) {
-        console.log(newData);
-        console.log(newRes);
-      }
-
-      // if (resource[key].resource.on_user === true && resource[key].resource.on_role === true) {
-      //   uPerm = resource[key].actions;
-      // }
-    }
-
-    if (!Permissions.every((item) => uPerm.includes(item))) {
+    if (isMatching === false) {
       return next(new AppError('Access denied', 403));
     }
     next();
