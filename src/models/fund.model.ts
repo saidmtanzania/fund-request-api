@@ -1,58 +1,56 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Document, Schema, model, Types } from 'mongoose';
 
-export interface IRequest extends Document {
-  staff: Types.ObjectId;
-  project: Types.ObjectId;
-  category: Types.ObjectId;
-  fund_reason: string;
-  fund_amount: number;
+export interface IFundRequest extends Document {
+  projectName: Types.ObjectId;
+  categoryName: Types.ObjectId;
+  fundAmount: number;
+  fundReason: string;
+  receiptRequired: boolean;
+  receiptURL?: string;
+  exemptionReason?: string;
   status: string;
-  issued_by: Types.ObjectId;
-  fund_feedback?: string;
-  isfileUpload?: boolean;
-  uploadStatus?: boolean;
-  uploadDoc?: string;
+  requestedBy: Types.ObjectId; // User ID or username
+  approvedBy?: string; // User ID or username
 }
 
-const requestSchema = new Schema<IRequest>({
-  staff: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'Staff is required!'],
+const FundRequestSchema = new Schema<IFundRequest>(
+  {
+    projectName: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
+      required: true,
+    },
+    categoryName: {
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true,
+    },
+    fundReason: {
+      type: String,
+      required: true,
+    },
+    fundAmount: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    receiptRequired: {
+      type: Boolean,
+      required: true,
+    },
+    receiptURL: {
+      type: String,
+    },
+    exemptionReason: {
+      type: String,
+    },
+    status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
+    requestedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   },
-  project: {
-    type: Schema.Types.ObjectId,
-    ref: 'Project',
-    required: [true, 'Project is required!'],
-  },
-  category: {
-    type: Schema.Types.ObjectId,
-    ref: 'Category',
-    required: [true, 'Category is required!'],
-  },
-  fund_reason: {
-    type: String,
-    required: [true, 'fund reason is required!'],
-  },
-  fund_amount: {
-    type: Number,
-    required: [true, 'fund amoount is required!'],
-  },
-  status: {
-    type: String,
-    enum: ['approved', 'rejected', 'pending'],
-    default: 'pending',
-  },
-  issued_by: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  },
-  fund_feedback: String,
-  isfileUpload: Boolean,
-  uploadStatus: Boolean,
-  uploadDoc: String,
-});
+  { timestamps: true }
+);
 
-const fundRequest = model<IRequest>('fundRequest', requestSchema);
+const Fund = model<IFundRequest>('FundRequest', FundRequestSchema);
 
-export default fundRequest;
+export default Fund;
