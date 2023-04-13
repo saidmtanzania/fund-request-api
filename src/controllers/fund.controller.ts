@@ -42,12 +42,14 @@ export const sendRequest: RequestHandler = catchAsync(async (req: any, res: any,
   }
 });
 
-export const requestExemption:RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
-   const { id } = req.params;
-   const requestedBy = req.user.id;
-   const { reason } = req.body;
+export const requestExemption: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  const { id } = req.params;
+  const requestedBy = req.user.id;
+  const { reason } = req.body;
 
-   const fundRequest = await Fund.findOneAndUpdate({ _id: id, requestedBy },{ receiptRequired: false, status: 'Pending', $push: { exemptionRequests: { reason } } },
-     { new: true }
-   );
+  const fundRequest = await Fund.findOneAndUpdate(
+    { _id: id, requestedBy },
+    { receiptRequired: false, status: 'Pending', $push: { exemptionRequests: { reason } } },
+    { new: true }
+  );
 });
