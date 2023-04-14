@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import { Document, Schema, model, Types } from 'mongoose';
 
 export interface IFundRequest extends Document {
@@ -51,6 +52,23 @@ const FundRequestSchema = new Schema<IFundRequest>(
   { timestamps: true }
 );
 
+FundRequestSchema.pre(/^find/, function (next) {
+  this.select('-__v -_id -updatedAt -createdAt')
+    .populate({
+      path: 'projectName',
+      select: '-__v -_id',
+    })
+    .populate({
+      path: 'categoryName',
+      select: '-__v -_id',
+    })
+    .populate({
+      path: 'requestedBy',
+      select: '-__v -_id',
+    });
+
+  next();
+});
 const Fund = model<IFundRequest>('FundRequest', FundRequestSchema);
 
 export default Fund;

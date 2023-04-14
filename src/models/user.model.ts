@@ -93,12 +93,12 @@ userSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'role',
     select: '-__v -_id',
-    populate: [
-      {
-        path: 'privileges',
-        select: '-__v -_id',
-      },
-    ],
+    // populate: [
+    //   {
+    //     path: 'privileges',
+    //     select: '-__v -_id',
+    //   },
+    // ],
   });
 
   next();
