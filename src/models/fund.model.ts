@@ -8,7 +8,7 @@ export interface IFundRequest extends Document {
   fundReason: string;
   receiptRequired: boolean;
   receiptURL?: string;
-  exemptionReason?: string;
+  exemptionRequests?: string;
   status: string;
   requestedBy: Types.ObjectId; // User ID or username
   approvedBy?: string; // User ID or username
@@ -42,7 +42,7 @@ const FundRequestSchema = new Schema<IFundRequest>(
     receiptURL: {
       type: String,
     },
-    exemptionReason: {
+    exemptionRequests: {
       type: String,
     },
     status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
@@ -53,7 +53,7 @@ const FundRequestSchema = new Schema<IFundRequest>(
 );
 
 FundRequestSchema.pre(/^find/, function (next) {
-  this.select('-__v -_id -updatedAt -createdAt')
+  this.select('-__v -updatedAt -createdAt')
     .populate({
       path: 'projectName',
       select: '-__v -_id',

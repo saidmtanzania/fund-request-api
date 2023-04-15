@@ -11,6 +11,8 @@ router.use(
     actions: ['create', 'read', 'update', 'approve', 'reject'],
   })
 );
-router.route('/').get(requestController.getRequest).post(requestController.sendRequest);
+router.route('/').get(requestController.getAllRequest).post(requestController.sendRequest);
+router.route('/:id').get(requestController.getRequest).patch(requestController.updateRequest);
+
 
 export default router;
