@@ -14,5 +14,4 @@ router.use(
 router.route('/').get(requestController.getAllRequest).post(requestController.sendRequest);
 router.route('/:id').get(requestController.getRequest).patch(requestController.updateRequest);
 
-
 export default router;
