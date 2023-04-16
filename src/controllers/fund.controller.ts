@@ -82,8 +82,7 @@ export const requestExemption: RequestHandler = catchAsync(async (req: any, res:
     );
 
     res.status(200).json({ message: 'exemption sent Successfully', data: exemptRes });
-  }
-  else{
+  } else {
     return next(new AppError('This route for applying exemption only', 400));
   }
 });
