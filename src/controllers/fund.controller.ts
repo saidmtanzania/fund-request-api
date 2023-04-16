@@ -74,12 +74,16 @@ export const requestExemption: RequestHandler = catchAsync(async (req: any, res:
   const { id } = req.params;
   const requestedBy = req.user.id;
   const { reason } = req.body;
+  if (req.body.reason) {
+    const exemptRes = await Fund.findOneAndUpdate(
+      { _id: id, requestedBy },
+      { receiptRequired: false, status: 'Pending', exemptionRequests: reason },
+      { new: true }
+    );
 
-  const exemptRes = await Fund.findOneAndUpdate(
-    { _id: id, requestedBy },
-    { receiptRequired: false, status: 'Pending', exemptionRequests: reason },
-    { new: true }
-  );
-
-  res.status(200).json({ message: 'exception sent Successfully', data: exemptRes });
+    res.status(200).json({ message: 'exemption sent Successfully', data: exemptRes });
+  }
+  else{
+    return next(new AppError('This route for applying exemption only', 400));
+  }
 });

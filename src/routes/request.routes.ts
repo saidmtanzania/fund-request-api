@@ -13,5 +13,8 @@ router.use(
 );
 router.route('/').get(requestController.getAllRequest).post(requestController.sendRequest);
 router.route('/:id').get(requestController.getRequest).patch(requestController.updateRequest);
+router.route('/:id/exempt').patch(requestController.requestExemption);
+router.route('/:id/upload');
+router.route('/:id/respond');
 
 export default router;
