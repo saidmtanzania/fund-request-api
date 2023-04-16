@@ -40,7 +40,7 @@ export const getProject: RequestHandler = catchAsync(async (req: any, res: any, 
   const project = await Project.findById(req.params.id);
 
   if (!project) {
-    return next(new AppError('There is no project with that ID!', 404));
+    return next(new AppError('Project not found!', 404));
   }
 
   res.status(200).json({
@@ -56,7 +56,7 @@ export const updateProject: RequestHandler = catchAsync(async (req: any, res: an
   });
 
   if (!project) {
-    return next(new AppError('There is no project exist with that ID!', 404));
+    return next(new AppError('Project not found!', 404));
   }
 
   res.status(200).json({
@@ -70,11 +70,11 @@ export const deleteProject: RequestHandler = catchAsync(async (req: any, res: an
   const project = await Project.findByIdAndDelete(proID);
 
   if (!project) {
-    return next(new AppError('There is no project exist with that ID!', 404));
+    return next(new AppError('Project not found!', 404));
   }
 
   res.status(204).json({
     status: 'success',
-    message: `Project with this ID:${proID} has been deleted Successfully`,
+    message: 'Project deleted Successfully',
   });
 });

@@ -40,7 +40,7 @@ export const getCategory: RequestHandler = catchAsync(async (req: any, res: any,
   const category = await Category.findById(req.params.id);
 
   if (!category) {
-    return next(new AppError('There is no Category with that ID!', 404));
+    return next(new AppError('Category not found!', 404));
   }
 
   res.status(200).json({
@@ -56,7 +56,7 @@ export const updateCategory: RequestHandler = catchAsync(async (req: any, res: a
   });
 
   if (!category) {
-    return next(new AppError('There is no Category exist with that ID!', 404));
+    return next(new AppError('Category not found!', 404));
   }
 
   res.status(200).json({
@@ -69,11 +69,11 @@ export const deleteCategory: RequestHandler = catchAsync(async (req: any, res: a
   const catID = req.params.id;
   const category = await Category.findByIdAndDelete(catID);
   if (!category) {
-    return next(new AppError('There is no Category exist with that ID!', 404));
+    return next(new AppError('Category not found!', 404));
   }
 
   res.status(204).json({
     status: 'success',
-    message: `Category with this ID:${catID} has been deleted Successfully`,
+    message: 'Category deleted Successfully',
   });
 });
