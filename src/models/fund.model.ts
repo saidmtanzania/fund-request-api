@@ -9,9 +9,10 @@ export interface IFundRequest extends Document {
   receiptRequired: boolean;
   receiptURL?: string;
   exemptionRequests?: string;
+  rejectedReason?: string;
   status: string;
   requestedBy: Types.ObjectId; // User ID or username
-  approvedBy?: string; // User ID or username
+  approvedBy?: Types.ObjectId; // User ID or username
 }
 
 const FundRequestSchema = new Schema<IFundRequest>(
@@ -42,6 +43,9 @@ const FundRequestSchema = new Schema<IFundRequest>(
     receiptURL: {
       type: String,
     },
+    rejectedReason:{
+      type: String,
+    },
     exemptionRequests: {
       type: String,
     },
@@ -64,6 +68,10 @@ FundRequestSchema.pre(/^find/, function (next) {
     })
     .populate({
       path: 'requestedBy',
+      select: '-__v -_id',
+    })
+    .populate({
+      path: 'approvedBy',
       select: '-__v -_id',
     });
 

@@ -70,6 +70,30 @@ export const updateRequest: RequestHandler = catchAsync(async (req: any, res: an
   res.status(200).json({ message: 'Request has been updated', data: fundres });
 });
 
+export const approveRequest: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  const { id } = req.params;
+  const { status, rejectedReason, receiptRequired } = req.body;
+  const approvedBy = req.user._id;
+  console.log(approvedBy);
+  const fund = await Fund.findOne({ _id: id });
+  if (!fund) {
+    return next(new AppError('request not found', 404));
+  }
+  if (fund.status === 'Approved' || fund.status === 'Rejected') {
+    return next(new AppError('Cant update Approved or Rejected Request', 400));
+  }
+  if (status || rejectedReason || receiptRequired) {
+    const fundres = await Fund.findByIdAndUpdate(
+      { _id: id },
+      { status, rejectedReason, receiptRequired, approvedBy },
+      { new: true }
+    );
+    res.status(200).json({ message: 'Request has been updated', data: fundres });
+  } else {
+    return next(new AppError('This route for approving or rejecting request', 400));
+  }
+});
+
 export const requestExemption: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   const { id } = req.params;
   const requestedBy = req.user.id;
