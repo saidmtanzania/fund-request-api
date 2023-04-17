@@ -43,7 +43,7 @@ const FundRequestSchema = new Schema<IFundRequest>(
     receiptURL: {
       type: String,
     },
-    rejectedReason:{
+    rejectedReason: {
       type: String,
     },
     exemptionRequests: {

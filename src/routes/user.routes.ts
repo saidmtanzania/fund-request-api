@@ -10,7 +10,6 @@ router.route('/forgotPassword').post(authController.forgotPassword);
 router.route('/resetPassword/:token').patch(authController.resetPassword);
 router.use(authController.protect, authController.restrictTo('admin', 'staff', 'finance'));
 
-
 router.route('/updateMyPassword').patch(
   authController.hasPermission({
     resources: { on_user: true },
