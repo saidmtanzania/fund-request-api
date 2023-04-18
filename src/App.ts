@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import morgan from 'morgan';
+import budgetRoute from './routes/budget.routes';
 import categoryRoute from './routes/category.routes';
 import projectRoute from './routes/project.routes';
 import requestRoute from './routes/request.routes';
@@ -20,6 +21,7 @@ app.use('/api/v1/roles', roleRoute);
 app.use('/api/v1/projects', projectRoute);
 app.use('/api/v1/category', categoryRoute);
 app.use('/api/v1/funds', requestRoute);
+app.use('/api/v1/budgets', budgetRoute);
 
 // handling unknown routes
 app.all('*', (req, _res, next) => {
