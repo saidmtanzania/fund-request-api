@@ -3,7 +3,6 @@ import * as authController from '../controllers/auth.controller';
 import * as userController from '../controllers/user.controller';
 import * as middleware from '../middlewares/middleware';
 
-
 const router = express.Router();
 
 router.route('/login').post(authController.login);

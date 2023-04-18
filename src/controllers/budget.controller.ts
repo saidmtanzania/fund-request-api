@@ -39,7 +39,6 @@ export const createBudget: RequestHandler = catchAsync(async (req: any, res: any
   res.json({ success: true, budget });
 });
 
-
 export const getBudget: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   const budget = await Budget.find();
 

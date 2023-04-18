@@ -44,7 +44,7 @@ export const protect: RequestHandler = catchAsync(async (req: any, res: any, nex
 });
 
 // Middleware to check if current date is past 1st of the month
-export const checkBudgetCreationDate:RequestHandler = (req: any, res: any, next: any) => {
+export const checkBudgetCreationDate: RequestHandler = (req: any, res: any, next: any) => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
@@ -77,12 +77,11 @@ export const hasPermission =
     next();
   };
 
-  export const restrictTo =
-    (...roles: any[]) =>
-    (req: any, _res: any, next: any) => {
-      if (!roles.includes(req.user.role.name)) {
-        return next(new AppError('Action forbidden!', 403));
-      }
-      next();
-    };
-
+export const restrictTo =
+  (...roles: any[]) =>
+  (req: any, _res: any, next: any) => {
+    if (!roles.includes(req.user.role.name)) {
+      return next(new AppError('Action forbidden!', 403));
+    }
+    next();
+  };

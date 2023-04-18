@@ -9,7 +9,10 @@ middleware.hasPermission({
   actions: ['create', 'read', 'update'],
 });
 
-router.route('/').get(budgetController.getBudget).post(middleware.checkBudgetCreationDate, budgetController.createBudget);
+router
+  .route('/')
+  .get(budgetController.getBudget)
+  .post(middleware.checkBudgetCreationDate, budgetController.createBudget);
 // router.route('/:id').get(budgetController.getRequest).patch(budgetController.updateRequest);
 // router.route('/:id/items').patch(budgetController.requestExemption);
 
