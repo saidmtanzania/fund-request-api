@@ -1,10 +1,10 @@
 import express from 'express';
-import * as authController from '../controllers/auth.controller';
 import * as requestController from '../controllers/fund.controller';
+import * as middleware from '../middlewares/middleware';
 
 const router = express.Router();
-router.use(authController.protect, authController.restrictTo('finance', 'staff'));
-authController.hasPermission({
+router.use(middleware.protect, middleware.restrictTo('finance', 'staff'));
+middleware.hasPermission({
   resources: { on_request: true },
   actions: ['create', 'read', 'update'],
 });
@@ -15,7 +15,7 @@ router.route('/:id/exempt').patch(requestController.requestExemption);
 router.route('/:id/upload');
 
 router.use(
-  authController.hasPermission({
+  middleware.hasPermission({
     resources: { on_request: true },
     actions: ['read', 'approve', 'reject'],
   })

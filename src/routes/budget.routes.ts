@@ -1,25 +1,16 @@
 import express from 'express';
-import * as authController from '../controllers/auth.controller';
-import * as requestController from '../controllers/budget.controller';
+import * as budgetController from '../controllers/budget.controller';
+import * as middleware from '../middlewares/middleware';
 
 const router = express.Router();
-router.use(authController.protect, authController.restrictTo('finance', 'staff'));
-authController.hasPermission({
+router.use(middleware.protect, middleware.restrictTo('finance'));
+middleware.hasPermission({
   resources: { on_request: true },
   actions: ['create', 'read', 'update'],
 });
 
-router.route('/').get(requestController.getAllRequest).post(requestController.sendRequest);
-router.route('/:id').get(requestController.getRequest).patch(requestController.updateRequest);
-router.route('/:id/exempt').patch(requestController.requestExemption);
-router.route('/:id/upload');
-
-router.use(
-  authController.hasPermission({
-    resources: { on_request: true },
-    actions: ['read', 'approve', 'reject'],
-  })
-);
-router.route('/:id/approve').patch(requestController.approveRequest);
+router.route('/').get(budgetController.getBudget).post(middleware.checkBudgetCreationDate, budgetController.createBudget);
+// router.route('/:id').get(budgetController.getRequest).patch(budgetController.updateRequest);
+// router.route('/:id/items').patch(budgetController.requestExemption);
 
 export default router;

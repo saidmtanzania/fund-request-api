@@ -21,7 +21,7 @@ app.use('/api/v1/roles', roleRoute);
 app.use('/api/v1/projects', projectRoute);
 app.use('/api/v1/category', categoryRoute);
 app.use('/api/v1/funds', requestRoute);
-app.use('/api/v1/budgets', budgetRoute);
+app.use('/api/v1/budget', budgetRoute);
 
 // handling unknown routes
 app.all('*', (req, _res, next) => {

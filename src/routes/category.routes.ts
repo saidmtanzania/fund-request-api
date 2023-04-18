@@ -1,9 +1,9 @@
 import express from 'express';
-import * as authController from '../controllers/auth.controller';
 import * as categoryController from '../controllers/category.controller';
+import * as middleware from '../middlewares/middleware';
 
 const router = express.Router();
-router.use(authController.protect);
+router.use(middleware.protect);
 
 router.route('/').get(categoryController.getAllCategory).post(categoryController.createCategory);
 router

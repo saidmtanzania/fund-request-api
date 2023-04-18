@@ -1,6 +1,8 @@
 import express from 'express';
 import * as authController from '../controllers/auth.controller';
 import * as userController from '../controllers/user.controller';
+import * as middleware from '../middlewares/middleware';
+
 
 const router = express.Router();
 
@@ -8,17 +10,17 @@ router.route('/login').post(authController.login);
 router.route('/signup').post(authController.signup);
 router.route('/forgotPassword').post(authController.forgotPassword);
 router.route('/resetPassword/:token').patch(authController.resetPassword);
-router.use(authController.protect, authController.restrictTo('admin', 'staff', 'finance'));
+router.use(middleware.protect, middleware.restrictTo('admin', 'staff', 'finance'));
 
 router.route('/updateMyPassword').patch(
-  authController.hasPermission({
+  middleware.hasPermission({
     resources: { on_user: true },
     actions: ['read', 'update'],
   }),
   authController.updatePassword
 );
 router.route('/updateMe').patch(
-  authController.hasPermission({
+  middleware.hasPermission({
     resources: { on_user: true },
     actions: ['read', 'update'],
   }),
@@ -26,7 +28,7 @@ router.route('/updateMe').patch(
 );
 
 router.use(
-  authController.hasPermission({
+  middleware.hasPermission({
     resources: { on_user: true, on_role: true },
     actions: ['create', 'read', 'update', 'delete'],
   })
