@@ -81,7 +81,7 @@ export const restrictTo =
   (...roles: any[]) =>
   (req: any, _res: any, next: any) => {
     if (!roles.includes(req.user.role.name)) {
-      return next(new AppError('Action forbidden!', 403));
+      return next(new AppError('Access denied', 403));
     }
     next();
   };
