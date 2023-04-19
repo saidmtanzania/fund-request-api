@@ -75,8 +75,8 @@ export const getBudgetItem: RequestHandler = catchAsync(async (req: any, res: an
   if (!budget) {
     return next(new AppError('Budget not found', 400));
   }
-let data:any;
- budget.items.forEach((itemz: any) => {
+  let data: any;
+  budget.items.forEach((itemz: any) => {
     if (itemz._id == item) data = itemz;
   });
   // Return success response
