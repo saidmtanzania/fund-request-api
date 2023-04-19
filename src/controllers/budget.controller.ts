@@ -71,13 +71,11 @@ export const createBudgetItem: RequestHandler = catchAsync(async (req: any, res:
 export const getBudgetItems: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   const { id, item } = req.params;
 
-  const  budget  = await Budget.findById(id);
-
+  const budget = await Budget.findById(id);
 
   if (!budget) {
     return next(new AppError('Items not found', 400));
   }
-
 
   // Return success response
   res.status(200).json({ success: true, items: budget.items });
