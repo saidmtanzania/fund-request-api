@@ -49,6 +49,7 @@ export const checkBudgetCreationDate: RequestHandler = (req: any, res: any, next
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
   const firstOfMonth = new Date(currentYear, currentMonth, 1);
+  // console.log(req.body.month > currentDate);
 
   // Check if current date is past 1st of the month
   if (currentDate > firstOfMonth) {

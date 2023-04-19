@@ -1,31 +1,53 @@
-import { Document, Schema, model } from 'mongoose';
+/* eslint-disable func-names */
+// Import Mongoose and define types
+import mongoose, { Document, Schema, Model, Types } from 'mongoose';
 
-// BudgetItem Interface
-export interface IBudgetItem extends Document {
-  name: string;
+// Define interface for BudgetItem
+interface IBudgetItem {
+  project: Types.ObjectId;
+  category: Types.ObjectId;
   amount: number;
 }
 
-// Budget Interface
-export interface IBudget extends Document {
+// Define interface for Budget
+interface IBudget extends Document {
   month: string;
   items: IBudgetItem[];
-  carryOverAmount: number;
+  carryOverAmount?: number;
 }
 
-// BudgetItem Schema
-const BudgetItemSchema = new Schema<IBudgetItem>({
-  name: { type: String, required: true },
+// Define BudgetItem Schema
+const budgetItemSchema: Schema = new Schema<IBudgetItem>({
+  project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
+  category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
   amount: { type: Number, required: true },
 });
 
-// Budget Schema
-const BudgetSchema = new Schema<IBudget>({
+// Define Budget Schema
+const budgetSchema: Schema = new Schema<IBudget>({
   month: { type: String, required: true },
-  items: [BudgetItemSchema],
-  carryOverAmount: { type: Number, default: 0 },
+  items: { type: [budgetItemSchema] },
+  carryOverAmount: { type: Number },
 });
 
-const Budget = model<IBudget>('Budget', BudgetSchema);
+budgetSchema.pre(/^find/, function (next) {
+  this.select(' -__v')
+    .populate({
+      path: 'items.project',
+      select: '-__v -_id',
+    })
+    .populate({
+      path: 'items.category',
+      select: '-__v -_id',
+    });
 
+  next();
+});
+// Create BudgetItem model
+// const BudgetItem: Model<IBudgetItem> = mongoose.model<IBudgetItem>('BudgetItem', budgetItemSchema);
+
+// Create Budget model
+const Budget: Model<IBudget> = mongoose.model<IBudget>('Budget', budgetSchema);
+
+// Export the models
 export default Budget;
