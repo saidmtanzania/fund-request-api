@@ -15,7 +15,7 @@ router
   .get(budgetController.getBudget)
   .post(middleware.checkBudgetCreationDate, budgetController.createBudget);
 // router.route('/:id').get(budgetController.getRequest).patch(budgetController.updateRequest);
-router.route('/:id/items').post(budgetController.createBudgetItem);
+router.route('/:id/items').get(budgetController.getBudgetItems).post(budgetController.createBudgetItem);
 router.route('/:id/items/:item').get(budgetController.getBudgetItem);
 
 export default router;

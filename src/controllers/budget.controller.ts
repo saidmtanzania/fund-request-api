@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable eqeqeq */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -67,6 +68,21 @@ export const createBudgetItem: RequestHandler = catchAsync(async (req: any, res:
   res.json({ success: true, budget });
 });
 
+export const getBudgetItems: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  const { id, item } = req.params;
+
+  const  budget  = await Budget.findById(id);
+
+
+  if (!budget) {
+    return next(new AppError('Items not found', 400));
+  }
+
+
+  // Return success response
+  res.status(200).json({ success: true, items: budget.items });
+});
+
 export const getBudgetItem: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   const { id, item } = req.params;
 
@@ -79,6 +95,10 @@ export const getBudgetItem: RequestHandler = catchAsync(async (req: any, res: an
   budget.items.forEach((itemz: any) => {
     if (itemz._id == item) data = itemz;
   });
+
+  if (!data) {
+    return next(new AppError('Item not found', 400));
+  }
   // Return success response
   res.status(200).json({ success: true, data });
 });
