@@ -34,11 +34,11 @@ budgetSchema.pre(/^find/, function (next) {
   this.select(' -__v')
     .populate({
       path: 'items.project',
-      select: '-__v -_id',
+      select: '-__v',
     })
     .populate({
       path: 'items.category',
-      select: '-__v -_id',
+      select: '-__v',
     });
 
   next();

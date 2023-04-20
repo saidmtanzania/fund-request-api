@@ -28,17 +28,16 @@ export const createBudget: RequestHandler = catchAsync(async (req: any, res: any
     return next(new AppError('Budget for the given month already exists', 400));
   }
 
-  const budget = await Budget.create({ month, items, carryOverAmount });
+  const budget = await Budget.create({ month, items, carryOverAmount }, { new: true });
 
   // Return success response
-  res.json({ success: true, budget });
+  res.status(201).json({ success: true, budget });
 });
 
 export const getBudget: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   const budget = await Budget.find();
-
   // Return success response
-  res.json({ success: true, budget });
+  res.status(200).json({ success: true, budget });
 });
 
 export const createBudgetItem: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
@@ -50,9 +49,27 @@ export const createBudgetItem: RequestHandler = catchAsync(async (req: any, res:
   if (!budget) {
     return next(new AppError('Budget not found', 404));
   }
-  console.log(budget.items);
-  budget.items.push(items);
 
+  if (
+    new Date().getMonth() >= budget.month.getMonth() &&
+    new Date().getFullYear() >= budget.month.getFullYear() &&
+    new Date().getDate() > 10
+  ) {
+    return next(new AppError('Item creation failed! Wait for next month', 400));
+  }
+  // Check if items already exist in the budget
+  const existingItems = budget.items.filter((item: any) =>
+    items.some(
+      (newItem: any) =>
+        newItem.project === item.project._id.toString() && newItem.category === item.category._id.toString()
+    )
+  );
+
+  if (existingItems.length > 0) {
+    return next(new AppError('Items already exist in the budget', 400));
+  }
+
+  budget.items.push(...items);
   await budget.save();
 
   // Return success response
