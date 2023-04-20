@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable no-return-assign */
 /* eslint-disable eqeqeq */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -14,26 +15,17 @@ export const createBudget: RequestHandler = catchAsync(async (req: any, res: any
   const { month, items, carryOverAmount } = req.body;
   // Validate that month is provided
   if (!month) {
-    return res.status(400).json({ success: false, message: 'Month is required' });
+    return next(new AppError('Month is required', 400));
   }
+  const date = new Date(month);
 
-  const validMonths = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  const exist = await Budget.find();
+  const existingBudget = exist.find(
+    (budget) => budget.month.getMonth() === date.getMonth() && budget.month.getFullYear() === date.getFullYear()
+  );
 
-  if (!validMonths.includes(month)) {
-    return res.status(400).json({ success: false, message: 'Invalid month' });
+  if (existingBudget) {
+    return next(new AppError('Budget for the given month already exists', 400));
   }
 
   const budget = await Budget.create({ month, items, carryOverAmount });
@@ -54,10 +46,9 @@ export const createBudgetItem: RequestHandler = catchAsync(async (req: any, res:
   const { id } = req.params;
 
   const budget = await Budget.findById(id);
-  // console.log(budget);
 
   if (!budget) {
-    return res.status(400).json({ success: false, message: 'Budget not found' });
+    return next(new AppError('Budget not found', 404));
   }
   console.log(budget.items);
   budget.items.push(items);
@@ -69,12 +60,12 @@ export const createBudgetItem: RequestHandler = catchAsync(async (req: any, res:
 });
 
 export const getBudgetItems: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
-  const { id, item } = req.params;
+  const { id } = req.params;
 
   const budget = await Budget.findById(id);
 
   if (!budget) {
-    return next(new AppError('Items not found', 400));
+    return next(new AppError('Budget not found', 404));
   }
 
   // Return success response
@@ -86,17 +77,19 @@ export const getBudgetItem: RequestHandler = catchAsync(async (req: any, res: an
 
   const budget = await Budget.findById(id);
 
+  // Change status code to 404 for not found
   if (!budget) {
-    return next(new AppError('Budget not found', 400));
+    return next(new AppError('Budget not found', 404));
   }
-  let data: any;
-  budget.items.forEach((itemz: any) => {
-    if (itemz._id == item) data = itemz;
-  });
 
+  // Use find() method to search for item
+  const data = budget.items.find((itemz: any) => itemz._id.toString() === item);
+
+  // Change status code to 404 for not found
   if (!data) {
-    return next(new AppError('Item not found', 400));
+    return next(new AppError('Item not found', 404));
   }
+
   // Return success response
   res.status(200).json({ success: true, data });
 });

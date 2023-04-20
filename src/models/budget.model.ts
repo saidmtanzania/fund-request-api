@@ -11,7 +11,7 @@ interface IBudgetItem {
 
 // Define interface for Budget
 interface IBudget extends Document {
-  month: string;
+  month: Date;
   items: IBudgetItem[];
   carryOverAmount?: number;
 }
@@ -25,7 +25,7 @@ const budgetItemSchema: Schema = new Schema<IBudgetItem>({
 
 // Define Budget Schema
 const budgetSchema: Schema = new Schema<IBudget>({
-  month: { type: String, required: true },
+  month: { type: Date, required: true },
   items: { type: [budgetItemSchema] },
   carryOverAmount: { type: Number },
 });
@@ -43,8 +43,6 @@ budgetSchema.pre(/^find/, function (next) {
 
   next();
 });
-// Create BudgetItem model
-// const BudgetItem: Model<IBudgetItem> = mongoose.model<IBudgetItem>('BudgetItem', budgetItemSchema);
 
 // Create Budget model
 const Budget: Model<IBudget> = mongoose.model<IBudget>('Budget', budgetSchema);

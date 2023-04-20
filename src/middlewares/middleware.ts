@@ -46,16 +46,12 @@ export const protect: RequestHandler = catchAsync(async (req: any, res: any, nex
 // Middleware to check if current date is past 1st of the month
 export const checkBudgetCreationDate: RequestHandler = (req: any, res: any, next: any) => {
   const currentDate = new Date();
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const firstOfMonth = new Date(currentYear, currentMonth, 1);
-  // console.log(req.body.month > currentDate);
+  const budgetMonth = new Date(req.body.month);
 
   // Check if current date is past 1st of the month
-  if (currentDate > firstOfMonth) {
+  if (!(budgetMonth > currentDate)) {
     return next(new AppError('Budget creation is only allowed before the 1st of the month', 403));
   }
-
   // Continue to next middleware or route handler
   next();
 };
