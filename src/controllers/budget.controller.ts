@@ -65,6 +65,7 @@ export const createBudgetItem: RequestHandler = catchAsync(async (req: any, res:
     )
   );
 
+  // Check if iexist return error as bad request
   if (existingItems.length > 0) {
     return next(new AppError('Items already exist in the budget', 400));
   }
