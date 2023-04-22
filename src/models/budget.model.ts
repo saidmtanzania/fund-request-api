@@ -2,8 +2,6 @@
 // Import Mongoose and define types
 import mongoose, { Document, Schema, Model, Types } from 'mongoose';
 
-
-
 // Define interface for BudgetItem
 
 interface IUsedAmount extends Document {
@@ -27,7 +25,7 @@ interface IBudget extends Document {
   totalAmount?: number;
 }
 
-const monthlyAmountUsedSchema: Schema = new Schema <IUsedAmount>({
+const monthlyAmountUsedSchema: Schema = new Schema<IUsedAmount>({
   month: { type: Number, required: true },
   year: { type: Number, required: true },
   amountUsed: { type: Number, required: true },
@@ -64,7 +62,7 @@ budgetSchema.pre(/^find/, function (next) {
 });
 
 // Define a pre-save middleware function for Budget schema
-budgetSchema.pre<IBudget>('save', function(next) {
+budgetSchema.pre<IBudget>('save', function (next) {
   // Calculate total amount by summing up amounts of all budget items
   const totalAmount = this.items.reduce((acc, budgetItem) => acc + budgetItem.amount, 0);
 
