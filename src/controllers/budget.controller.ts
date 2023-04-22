@@ -28,6 +28,10 @@ export const createBudget: RequestHandler = catchAsync(async (req: any, res: any
     return next(new AppError('Budget for the given month already exists', 400));
   }
 
+  // if((new Date().getDay() <= 10)){
+  //   return next(new AppError('Budget creation time expired!', 400));
+  // }
+
   const budget = await Budget.create({ month, items, carryOverAmount }, { new: true });
 
   // Return success response
