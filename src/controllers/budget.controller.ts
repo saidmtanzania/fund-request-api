@@ -32,7 +32,7 @@ export const createBudget: RequestHandler = catchAsync(async (req: any, res: any
   //   return next(new AppError('Budget creation time expired!', 400));
   // }
 
-  const budget = await Budget.create({ month, items, carryOverAmount }, { new: true });
+  const budget = await Budget.create({ month, items, carryOverAmount });
 
   // Return success response
   res.status(201).json({ success: true, budget });
