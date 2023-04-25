@@ -24,6 +24,7 @@ interface IBudget extends Document {
   totalAmount?: number;
 }
 
+// Define MonthlyUsedAmount Schema
 const monthlyAmountUsedSchema: Schema = new Schema<IUsedAmount>({
   month: { type: Date, required: true },
   amountUsed: { type: Number, required: true },
