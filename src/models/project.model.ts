@@ -1,6 +1,6 @@
 import { Schema, Document, model } from 'mongoose';
 // const softDel = require('mongoose-delete');
-interface IProject extends Document{
+interface IProject extends Document {
   name: string;
 }
 const projectSchema = new Schema<IProject>({
