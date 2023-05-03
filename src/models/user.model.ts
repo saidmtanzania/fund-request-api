@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 import { Schema, model, Document, Types } from 'mongoose';
 import validator from 'validator';
 
-export interface IUser extends Document {
+interface IUser extends Document {
   first_name: string;
   last_name: string;
   email: string;
@@ -93,12 +93,6 @@ userSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'role',
     select: '-__v -_id',
-    // populate: [
-    //   {
-    //     path: 'privileges',
-    //     select: '-__v -_id',
-    //   },
-    // ],
   });
 
   next();

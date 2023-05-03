@@ -1,7 +1,9 @@
-import * as mongoose from 'mongoose';
+import { Schema, Document, model } from 'mongoose';
 // const softDel = require('mongoose-delete');
-
-const projectSchema = new mongoose.Schema({
+interface IProject extends Document{
+  name: string;
+}
+const projectSchema = new Schema<IProject>({
   name: {
     type: String,
     unique: true,
@@ -11,6 +13,6 @@ const projectSchema = new mongoose.Schema({
 
 // projectSchema.plugin(softDel);
 
-const Project = mongoose.model('Project', projectSchema);
+const Project = model<IProject>('Project', projectSchema);
 
 export default Project;

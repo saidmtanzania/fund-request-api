@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import { Document, Schema, model, Types } from 'mongoose';
 
-export interface IFundRequest extends Document {
+interface IFundRequest extends Document {
   projectName: Types.ObjectId;
   categoryName: Types.ObjectId;
   fundAmount: number;

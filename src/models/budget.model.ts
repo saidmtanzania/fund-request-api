@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable func-names */
 // Import Mongoose and define types
-import mongoose, { Document, Schema, Model, Types } from 'mongoose';
+import { Document, Schema, model, Types } from 'mongoose';
 
 // Define interface for BudgetItem
 
 interface IUsedAmount extends Document {
-  month: Date;
+  month: number;
+  year: number;
   amountUsed: number;
 }
 // Define interface for BudgetItem
@@ -22,16 +24,18 @@ interface IBudget extends Document {
   items: IBudgetItem[];
   carryOverAmount?: number;
   totalAmount?: number;
+  checkItems: (pro: any, cat:any, mon: any) => Promise<any>;
 }
 
 // Define MonthlyUsedAmount Schema
-const monthlyAmountUsedSchema: Schema = new Schema<IUsedAmount>({
-  month: { type: Date, required: true },
+const monthlyAmountUsedSchema = new Schema<IUsedAmount>({
+  month: { type: Number, required: true },
+  year: { type: Number, required: true },
   amountUsed: { type: Number, required: true },
 });
 
 // Define BudgetItem Schema
-const budgetItemSchema: Schema = new Schema<IBudgetItem>({
+const budgetItemSchema = new Schema<IBudgetItem>({
   project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
   category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
   amount: { type: Number, required: true },
@@ -39,7 +43,7 @@ const budgetItemSchema: Schema = new Schema<IBudgetItem>({
 });
 
 // Define Budget Schema
-const budgetSchema: Schema = new Schema<IBudget>({
+const budgetSchema = new Schema<IBudget>({
   month: { type: Date, required: true },
   items: { type: [budgetItemSchema] },
   carryOverAmount: { type: Number },
@@ -73,7 +77,7 @@ budgetSchema.pre<IBudget>('save', function (next) {
 });
 
 // Create Budget model
-const Budget: Model<IBudget> = mongoose.model<IBudget>('Budget', budgetSchema);
+const Budget = model<IBudget>('Budget', budgetSchema);
 
 // Export the models
 export default Budget;
