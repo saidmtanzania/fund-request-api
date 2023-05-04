@@ -8,7 +8,6 @@ import Fund from '../models/fund.model';
 import AppError from '../utils/AppError';
 import APIFeatures from '../utils/apiFeatures';
 import catchAsync from '../utils/catchAsync';
-import findBudgetByMonthAndYear from '../utils/findBudgetByMonthAndYear';
 
 export const getAllRequest: RequestHandler = catchAsync(async (req: any, res: any, _next: any) => {
   const feature = new APIFeatures(Fund.find(), req.query).filter().sort().limitFields().paginate();
