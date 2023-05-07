@@ -9,6 +9,7 @@ import AppError from '../utils/AppError';
 import APIFeatures from '../utils/apiFeatures';
 import catchAsync from '../utils/catchAsync';
 
+// Get All Request
 export const getAllRequest: RequestHandler = catchAsync(async (req: any, res: any, _next: any) => {
   const feature = new APIFeatures(Fund.find(), req.query).filter().sort().limitFields().paginate();
   // Execute query
