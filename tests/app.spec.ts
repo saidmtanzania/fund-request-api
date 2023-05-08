@@ -4,7 +4,7 @@ import request from 'supertest';
 let server: any;
 
 beforeAll((done) => {
-  server = app.listen(3000, () => {
+  server = app.listen(3005, () => {
     done();
   });
 });
