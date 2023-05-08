@@ -66,18 +66,11 @@ budgetSchema.pre(/^find/, function (next) {
 
 // Define a pre-save middleware function for Budget schema
 budgetSchema.pre<IBudget>('save', function (next) {
-  // Calculate total amount by summing up amounts of all budget items
   const totalAmount = this.items.reduce((acc, budgetItem) => acc + budgetItem.amount, 0);
-
-  // Set the calculated total amount to the totalAmount field
   this.totalAmount = totalAmount;
-
-  // Continue saving the document
   next();
 });
 
-// Create Budget model
 const Budget = model<IBudget>('Budget', budgetSchema);
 
-// Export the models
 export default Budget;
