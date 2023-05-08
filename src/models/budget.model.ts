@@ -24,7 +24,6 @@ interface IBudget extends Document {
   items: IBudgetItem[];
   carryOverAmount?: number;
   totalAmount?: number;
-  checkItems: (pro: any, cat: any, mon: any) => Promise<any>;
 }
 
 // Define MonthlyUsedAmount Schema
