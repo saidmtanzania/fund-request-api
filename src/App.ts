@@ -23,7 +23,7 @@ app.use('/api/v1/category', categoryRoute);
 app.use('/api/v1/funds', requestRoute);
 app.use('/api/v1/budget', budgetRoute);
 
-// handling unknown routes
+// handling unknown routes to 404
 app.all('*', (req, _res, next) => {
   next(new AppError(`Cant find ${req.originalUrl}`, 404));
 });
