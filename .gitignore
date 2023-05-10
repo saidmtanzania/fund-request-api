@@ -21,3 +21,4 @@ logs/
 **/.DS_Store
 config.env
 file.txt
+payload.json

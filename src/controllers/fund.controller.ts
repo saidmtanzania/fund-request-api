@@ -128,7 +128,6 @@ export const approveRequest: RequestHandler = catchAsync(async (req: any, res: a
       return next(new AppError('Bad EmP', 400));
     }
     if (fundres.status === 'Approved') {
-      console.log(fundres.fundAmount);
       const budget = await budDeal(next);
       const items = ItemDeal(budget, fundres.projectName._id, fundres.categoryName._id);
       items.monthlyAmountsUsed.push({
@@ -138,9 +137,7 @@ export const approveRequest: RequestHandler = catchAsync(async (req: any, res: a
       });
       items.amount -= fundres.fundAmount;
       await budget.save();
-      console.log(items);
     }
-
     res.status(200).json({ message: 'Request has been updated', data: fundres });
   } else {
     return next(new AppError('This route for approving or rejecting request', 400));
