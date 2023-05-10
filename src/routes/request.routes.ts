@@ -9,7 +9,16 @@ middleware.hasPermission({
   actions: ['create', 'read', 'update'],
 });
 
-router.route('/').get(requestController.getAllRequest).post(requestController.sendRequest);
+router
+  .route('/')
+  .get(requestController.getAllRequest)
+  .post(
+    middleware.hasPermission({
+      resources: { on_request: true },
+      actions: ['create', 'read', 'update'],
+    }),
+    requestController.sendRequest
+  );
 router.route('/:id').get(requestController.getRequest).patch(requestController.updateRequest);
 router.route('/:id/exempt').patch(requestController.requestExemption);
 router.route('/:id/upload');

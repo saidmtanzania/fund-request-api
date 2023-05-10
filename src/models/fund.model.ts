@@ -60,11 +60,11 @@ FundRequestSchema.pre(/^find/, function (next) {
   this.select('-__v -updatedAt -createdAt')
     .populate({
       path: 'projectName',
-      select: '-__v -_id',
+      select: '-__v',
     })
     .populate({
       path: 'categoryName',
-      select: '-__v -_id',
+      select: '-__v',
     })
     .populate({
       path: 'requestedBy',
