@@ -3,6 +3,7 @@ import * as requestController from '../controllers/fund.controller';
 import * as middleware from '../middlewares/middleware';
 
 const router = express.Router();
+router.route('/reqstats').get(requestController.getFundStats);
 router.use(middleware.protect, middleware.restrictTo('finance', 'staff'));
 middleware.hasPermission({
   resources: { on_request: true },

@@ -161,9 +161,37 @@ export const requestExemption: RequestHandler = catchAsync(async (req: any, res:
 });
 
 export const getFundStats: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
-  const stats = Fund.aggregate();
+  const stats = await Fund.aggregate([
+    {
+      $match: {
+        createdAt: { $lte: new Date() },
+      },
+    },
+    {
+      $group: {
+        _id: { $toUpper: '$status' },
+        numRequest: {
+          $sum: 1,
+        },
+        avgAmount: {
+          $avg: '$fundAmount',
+        },
+        minAmount: {
+          $min: '$fundAmount',
+        },
+        maxAmount: {
+          $max: '$fundAmount',
+        },
+      },
+    },
+    {
+      $sort: { avgAmount: 1 },
+    },
+  ]);
+
+  res.status(200).json({ status: 'success', data: { stats } });
 });
 
 export const getBudStats: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
-  const stats = Budget.aggregate();
+  const stats = Budget.aggregate([]);
 });
