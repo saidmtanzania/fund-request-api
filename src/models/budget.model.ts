@@ -6,8 +6,7 @@ import { Document, Schema, model, Types } from 'mongoose';
 // Define interface for BudgetItem
 
 interface IUsedAmount extends Document {
-  month: number;
-  year: number;
+  month: Date;
   amountUsed: number;
 }
 // Define interface for BudgetItem
@@ -28,8 +27,7 @@ interface IBudget extends Document {
 
 // Define MonthlyUsedAmount Schema
 const monthlyAmountUsedSchema = new Schema<IUsedAmount>({
-  month: { type: Number, required: true },
-  year: { type: Number, required: true },
+  month: { type: Date, required: true },
   amountUsed: { type: Number, required: true },
 });
 

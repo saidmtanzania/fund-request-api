@@ -131,8 +131,7 @@ export const approveRequest: RequestHandler = catchAsync(async (req: any, res: a
       const budget = await budDeal(next);
       const items = ItemDeal(budget, fundres.projectName._id, fundres.categoryName._id);
       items.monthlyAmountsUsed.push({
-        month: new Date().getMonth() + 1,
-        year: new Date().getFullYear(),
+        month: new Date(),
         amountUsed: fundres.fundAmount,
       });
       items.amount -= fundres.fundAmount;
