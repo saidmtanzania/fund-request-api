@@ -159,3 +159,7 @@ export const requestExemption: RequestHandler = catchAsync(async (req: any, res:
     return next(new AppError('This route for applying exemption only', 400));
   }
 });
+
+export const getFundStats: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  const stats = Fund.aggregate();
+});
