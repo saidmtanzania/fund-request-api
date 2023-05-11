@@ -163,3 +163,7 @@ export const requestExemption: RequestHandler = catchAsync(async (req: any, res:
 export const getFundStats: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
   const stats = Fund.aggregate();
 });
+
+export const getBudStats: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
+  const stats = Budget.aggregate();
+});
