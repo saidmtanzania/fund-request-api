@@ -193,5 +193,33 @@ export const getFundStats: RequestHandler = catchAsync(async (req: any, res: any
 });
 
 export const getBudStats: RequestHandler = catchAsync(async (req: any, res: any, next: any) => {
-  const stats = Budget.aggregate([]);
+  const year = req.params.year * 1;
+
+  const stats = await Budget.aggregate([
+    {
+      $unwind: '$items',
+    },
+    {
+      $match: {
+        month: {
+          $gte: new Date(`${year}-01-01`),
+          $lte: new Date(`${year}-12-31`),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { $month: '$month' },
+        numBudget: { $sum: 1 },
+        project: { $push: '$items.project' },
+        category: { $push: '$items.category' },
+        amount: { $push: '$items.amount' },
+        monthlyAmountsUsed: { $push: '$items.monthlyAmountsUsed' },
+        carryOver: { $addToSet: '$carryOverAmount' },
+        Total: { $addToSet: '$totalAmount' },
+      },
+    },
+  ]);
+
+  res.status(200).json({ status: 'success', data: { stats } });
 });

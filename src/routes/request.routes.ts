@@ -4,6 +4,7 @@ import * as middleware from '../middlewares/middleware';
 
 const router = express.Router();
 router.route('/reqstats').get(requestController.getFundStats);
+router.route('/budstats/:year').get(requestController.getBudStats);
 router.use(middleware.protect, middleware.restrictTo('finance', 'staff'));
 middleware.hasPermission({
   resources: { on_request: true },
