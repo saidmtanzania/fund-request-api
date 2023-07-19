@@ -5,6 +5,23 @@ import * as middleware from '../middlewares/middleware';
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /login:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: User login
+ *     description: Endpoint for user login.
+ *     responses:
+ *       200:
+ *         description: User login successful.
+ *       401:
+ *         description: Unauthorized access.
+ *       500:
+ *         description: Internal server error.
+ */
+
 router.route('/login').post(authController.login);
 router.route('/signup').post(authController.signup);
 router.route('/forgotPassword').post(authController.forgotPassword);

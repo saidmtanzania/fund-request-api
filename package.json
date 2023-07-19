@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "nodemon dist/Server.js",
+    "start": "nodemon dist/src/Server.js",
     "dev": "nodemon src/Server.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts",

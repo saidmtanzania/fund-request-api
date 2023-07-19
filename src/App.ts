@@ -8,6 +8,7 @@ import requestRoute from './routes/request.routes';
 import roleRoute from './routes/role.routes';
 import userRoute from './routes/user.routes';
 import AppError from './utils/AppError';
+import swaggerDocs from './utils/Swagger';
 import eHandler from './utils/errorHandler';
 
 const app = express();
@@ -22,9 +23,7 @@ app.use('/api/v1/projects', projectRoute);
 app.use('/api/v1/category', categoryRoute);
 app.use('/api/v1/funds', requestRoute);
 app.use('/api/v1/budget', budgetRoute);
-app.use('/api/v1/check-health', (req, res) => {
-  res.status(200).json({ healthy: true });
-});
+swaggerDocs(app);
 // handling unknown routes to 404
 app.all('*', (req, _res, next) => {
   next(new AppError(`Cant find ${req.originalUrl}`, 404));
