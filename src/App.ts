@@ -22,7 +22,9 @@ app.use('/api/v1/projects', projectRoute);
 app.use('/api/v1/category', categoryRoute);
 app.use('/api/v1/funds', requestRoute);
 app.use('/api/v1/budget', budgetRoute);
-
+app.use('/api/v1/check-health', (req, res) => {
+  res.status(200).json({ healthy: true });
+});
 // handling unknown routes to 404
 app.all('*', (req, _res, next) => {
   next(new AppError(`Cant find ${req.originalUrl}`, 404));
